@@ -1,0 +1,49 @@
+<!--
+Copyright 2013 The Polymer Authors. All rights reserved.
+Use of this source code is governed by a BSD-style
+license that can be found in the LICENSE file.
+-->
+<!--
+/**
+ * g-panel-slider is a g-panels that can be slid with the mouse, mousewheel or touchscreen.
+ *
+ * Example:
+ *
+ *     <g-panel-slider selected="0">
+ *       <div>One</div>
+ *       <div>Two</div>
+ *       <div>Three</div>
+ *       <div>Four</div>
+ *     </g-panel-slider>
+ *
+ * @class g-panel-slider
+ * @extends g-panels
+ */
+-->
+<link rel="import" href="../polymer-all/toolkit-ui/elements/g-panels.html">
+<element name="g-panel-slider" extends="g-panels">
+  <link rel="stylesheet" polymer-scope="controller" href="g-panel-slider-controller.css" />  
+  <template>
+    <shadow touch-action="pan-y"></shadow>
+  </template>
+  <script>
+    Polymer.register(this, {
+      ready: function() {
+        // TODO(sorvell): import styling from panels... this should be @host-ified
+        Polymer.installControllerStyles(this, this.elementElement);
+        this.classList.add('flexbox', 'col');
+        this.addEventListener('trackstart', this.onTrackStart);
+        this.addEventListener('track', this.onTrack);
+        this.addEventListener('trackEnd', this.onTrackEnd);
+        this.super();
+      },
+      onTrackStart: function(e) {
+          console.log('trackstart');
+      },
+      onTrackMove: function(e) {
+      },
+      onTrackEnd: function(e) {
+      }
+    });
+  </script>
+</element>

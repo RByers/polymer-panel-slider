@@ -6,9 +6,12 @@ license that can be found in the LICENSE file.
 -->
 <html>
 <head>
-  <title>Panels</title>
-  <script src="../../polymer/polymer.js"></script>
-  <link rel="import" href="../elements/g-panels.html">
+  <title>Panel Slider</title>
+  <script src="../polymer-all/polymer/polymer.js"></script>
+  <!-- TODO: How does g-panel-slider say it needs this? -->
+  <script src="../polymer-all/PointerGestures/pointergestures.js"></script>
+  
+  <link rel="import" href="g-panel-slider.html">
   <style>
     html, body {
       height: 100%;
@@ -20,7 +23,7 @@ license that can be found in the LICENSE file.
       display: -webkit-box;
       display: -webkit-flex;
       display: flex;
-      webkit-box-orient: vertical;
+      -webkit-box-orient: vertical;
       -webkit-flex-flow: column;
       flex-direction: column;
     }
@@ -29,7 +32,7 @@ license that can be found in the LICENSE file.
       padding: 10px;
     }
 
-    g-panels {
+    g-panel-slider {
       counter-reset: section;
       -webkit-box-flex: 1;
       -webkit-flex: 1;
@@ -45,32 +48,6 @@ license that can be found in the LICENSE file.
       padding: 10px;
       box-sizing: border-box;
     }
-
-    g-panels[transition="flow"] > * {
-      width: 80%;
-      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 4px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    g-panels[transition="flow"] > *:nth-of-type(1) {
-      width: 200px;
-    }
-
-    g-panels[transition="flow"] > *:nth-of-type(2) {
-      width: 240px;
-    }
-
-    g-panels[transition="flow"] > *:nth-of-type(3) {
-      width: 280px;
-    }
-
-    g-panels[transition="flow"] > *:nth-of-type(4) {
-      width: 100%;
-    }
-
-    g-panels[transition="flow"] > *:nth-of-type(5) {
-      width: 280px;
-    }
-
   </style>
 </head>
 <body>
@@ -78,21 +55,8 @@ license that can be found in the LICENSE file.
     <button onclick="previous();">&laquo;</button>
     <button onclick="next();">&raquo;</button>
     <button onclick="addPanel();">+</button>
-    <select onchange="changeTransition(event)">
-      <option  selected>fade</option>
-      <option value="none">none</option>
-      <option value="keyframe">hslide</option>
-      <option value="keyframe">vslide</option>
-      <option value="keyframe">hslideover</option>
-      <option value="keyframe">vslideover</option>
-      <option value="keyframe">explode</option>
-      <option value="keyframe">scale-slide</option>
-      <option value="keyframe">fly-up-right</option>
-      <option value="flow">flow</option>
-    </select>
-    <label>enable transitions: <input type="checkbox" checked onchange="transitionableChange(event)"></label>
   </div>
-  <g-panels selected="zing" transition="keyframe" class="g-panels-fade">
+  <g-panel-slider selected="zing" transition="keyframe" class="g-panels g-panels-hslide">
     <section name="foo" style="background: lightsteelblue;">Panel 1</section>
     <section name="zonk" style="background: tomato;">Panel 2</section>
     <section name="bar" style="background: beige;">Panel 3
@@ -102,27 +66,15 @@ license that can be found in the LICENSE file.
     </section>
     <section name="zing" style="background: silver;">Panel 4</section>
     <section name="baz" style="background: whitesmoke;" class="right">Panel 5</section>
-  </g-panels>
+  </g-panel-slider>
 <script>
   document.addEventListener("WebComponentsReady", function() {
-    panels = document.querySelector("g-panels");
+    panels = document.querySelector("g-panel-slider");
     next = function() {
       panels.next();
     }
     previous = function() {
       panels.previous();
-    }
-    
-    transitionableChange = function(e) {
-      panels.enableTransitions(e.target.checked);
-    }
-
-    changeTransition = function(e) {
-      panels.transition = e.target.value;
-      var selectedOption = e.target.options[e.target.selectedIndex];
-      var className = selectedOption ? selectedOption.textContent : '';
-      panels.className = 'g-panels-' + className;
-      panels.focus();
     }
     
     addPanel = function() {

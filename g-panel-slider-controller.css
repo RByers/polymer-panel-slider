@@ -1,0 +1,68 @@
+/*
+ * Copyright 2013 The Polymer Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style
+ * license that can be found in the LICENSE file.
+ */
+ 
+/* Styling to apply to component children based on conditional
+host styling. This should be removed when the ::shadow pseudo 
+selector is available. */
+/*
+TODO(sorvell): remove when this issue is addressed:
+  https://www.w3.org/Bugs/Public/show_bug.cgi?id=21389
+
+*/
+g-panel-slider > * {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+g-panel-slider > g-panel-slider {
+  position: absolute;
+}
+
+g-panel-slider > .transition {
+  -webkit-transition: all 0.218s ease-in-out;
+  transition: all 0.218s ease-in-out;
+}
+
+g-panel-slider > .animate {
+  -webkit-animation-duration: 0.218s;
+  -webkit-animation-fill-mode: both;
+  animation-duration: 0.218s;
+  animation-fill-mode: both;
+}
+
+/*
+TODO(sorvell): remove host conditional styling when this issue is addressed:
+  https://www.w3.org/Bugs/Public/show_bug.cgi?id=21390
+*/
+g-panel-slider > .panels-ascending-from {
+  -webkit-animation: 0.218s both;
+  -webkit-animation-name: g-panels-slideLeft;
+  animation: 0.218s both;
+  animation-name: g-panels-slideLeft;
+}
+g-panel-slider > .panels-ascending-to {
+  -webkit-animation: 0.218s both;
+  -webkit-animation-name: g-panels-slideFromRight;
+  animation: 0.218s both;
+  animation-name: g-panels-slideFromRight;
+}
+g-panel-slider > .panels-descending-from {
+  -webkit-animation: 0.218s both;
+  -webkit-animation-name: g-panels-slideRight;
+  animation: 0.218s both;
+  animation-name: g-panels-slideRight;
+}
+g-panel-slider > .panels-descending-to {
+  -webkit-animation: 0.218s both;
+  -webkit-animation-name: g-panels-slideFromLeft;
+  animation: 0.218s both;
+  animation-name: g-panels-slideFromLeft;
+}
