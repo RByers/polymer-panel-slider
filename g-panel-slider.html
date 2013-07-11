@@ -18,6 +18,13 @@ license that can be found in the LICENSE file.
  *
  * @class g-panel-slider
  * @extends g-panels
+ *
+ * Future work:
+ *  - track velocity to permit flinging between cards without moving full distance
+ *  - allow a vertical panel arrangement as well
+ *  - enable mousewheel sliding (especially with precise deltas from trackpads)
+ *  - allow sliding more than one panel at a time (eg. when dragging past the end of the window)
+ *  - allow more than one panel to be shown at once (eg. image caoursell) 
  */
 -->
 <link rel="import" href="../polymer-all/toolkit-ui/elements/g-panels.html">
@@ -34,15 +41,70 @@ license that can be found in the LICENSE file.
         this.classList.add('flexbox', 'col');
         this.addEventListener('trackstart', this.onTrackStart);
         this.addEventListener('track', this.onTrack);
-        this.addEventListener('trackEnd', this.onTrackEnd);
+        this.addEventListener('trackend', this.onTrackEnd);
+        // Disable text selection while dragging the mouse
+        // TODO: perhaps we should just disable mouse tracking instead?
+        this.addEventListener('mousedown', function(e) { e.preventDefault(); });
         this.super();
       },
+      slidingIn: null,
+      slidingOut: null,
+      lastDir: 0,
+      containerWidth: 0,
       onTrackStart: function(e) {
           console.log('trackstart');
+          this.containerWidth = this.offsetWidth;
+          this.slidingOut = this.getSelectedPanel();
       },
-      onTrackMove: function(e) {
+      onTrack: function(e) {
+          var dir = e.dx < 0 ? -1 : e.dx > 0 ? 1 : 0;
+          if (dir && dir != this.lastDir) {
+              this.lastDir = dir;
+              if (this.slidingIn) { 
+                  this.clearSlidingIn();
+              }
+              var newIndex = this.clampIndex(this.index - dir);
+              if (newIndex == this.index) {
+                  this.slidingIn = null;
+              } else {
+                  this.slidingIn = this.panelAtIndex(newIndex);
+                  this.enablePanelShowing(this.slidingIn, true);
+              }
+          }
+          if (this.slidingIn) {
+              var dx = e.dx;
+              if (Math.abs(dx) > this.containerWidth) {
+                  dx = this.containerWidth * dir;
+              }
+              this.slidingIn.style.webkitTransform = 'translate3d(' + (dx - this.containerWidth * dir) + 'px, 0, 0)';
+              this.slidingOut.style.webkitTransform = 'translate3d(' + dx + 'px, 0, 0)';
+          }
       },
       onTrackEnd: function(e) {
+          console.log('trackend');
+          if (this.slidingOut) {
+              // TODO: temporarily reset transition to a custom one
+              // that animates from the current position.
+              this.slidingOut.style.webkitTransform = '';
+              this.slidingOut = null;              
+              if (Math.abs(e.dx) > this.containerWidth / 2) {
+                  var transitionsEnabled = this._canTransition;
+                  if (transitionsEnabled)
+                      this.enableTransitions(false);
+                  this.index = this.indexOf(this.slidingIn);
+                  if (transitionsEnabled)
+                      this.enableTransitions(true);
+              }
+          }
+          this.lastDir = 0;
+          this.clearSlidingIn();
+      },
+      clearSlidingIn: function() {
+          if (this.slidingIn) {
+              this.enablePanelShowing(this.slidingIn, false);
+              this.slidingIn.style.webkitTransform = '';
+              this.slidingIn = null;
+          }          
       }
     });
   </script>
