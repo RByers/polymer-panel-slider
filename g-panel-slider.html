@@ -31,13 +31,14 @@ license that can be found in the LICENSE file.
 <element name="g-panel-slider" extends="g-panels">
   <link rel="stylesheet" polymer-scope="controller" href="g-panel-slider-controller.css" />  
   <template>
-    <shadow touch-action="pan-y"></shadow>
+    <shadow></shadow>
   </template>
   <script>
     Polymer.register(this, {
       ready: function() {
         // TODO(sorvell): import styling from panels... this should be @host-ified
         Polymer.installControllerStyles(this, this.elementElement);
+        this.setAttribute('touch-action', 'none');
         this.classList.add('flexbox', 'col');
         this.addEventListener('trackstart', this.onTrackStart);
         this.addEventListener('track', this.onTrack);
@@ -82,11 +83,10 @@ license that can be found in the LICENSE file.
       },
       onTrackEnd: function(e) {
           console.log('trackend');
-          if (this.slidingOut) {
+          if (this.slidingIn) {
               // TODO: temporarily reset transition to a custom one
               // that animates from the current position.
               this.slidingOut.style.webkitTransform = '';
-              this.slidingOut = null;              
               if (Math.abs(e.dx) > this.containerWidth / 2) {
                   var transitionsEnabled = this._canTransition;
                   if (transitionsEnabled)
@@ -96,6 +96,7 @@ license that can be found in the LICENSE file.
                       this.enableTransitions(true);
               }
           }
+          this.slidingOut = null;              
           this.lastDir = 0;
           this.clearSlidingIn();
       },
