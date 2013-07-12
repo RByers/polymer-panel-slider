@@ -38,31 +38,51 @@ g-panel-slider > .animate {
   animation-fill-mode: both;
 }
 
-/*
-TODO(sorvell): remove host conditional styling when this issue is addressed:
-  https://www.w3.org/Bugs/Public/show_bug.cgi?id=21390
-*/
-g-panel-slider > .panels-ascending-from {
+g-panel-slider > .panels-ascending-from:not(.finish-slide) {
   -webkit-animation: 0.218s both;
   -webkit-animation-name: g-panels-slideLeft;
   animation: 0.218s both;
   animation-name: g-panels-slideLeft;
 }
-g-panel-slider > .panels-ascending-to {
+g-panel-slider > .panels-ascending-to:not(.finish-slide) {
   -webkit-animation: 0.218s both;
   -webkit-animation-name: g-panels-slideFromRight;
   animation: 0.218s both;
   animation-name: g-panels-slideFromRight;
 }
-g-panel-slider > .panels-descending-from {
+g-panel-slider > .panels-descending-from:not(.finish-slide) {
   -webkit-animation: 0.218s both;
   -webkit-animation-name: g-panels-slideRight;
   animation: 0.218s both;
   animation-name: g-panels-slideRight;
 }
-g-panel-slider > .panels-descending-to {
+g-panel-slider > .panels-descending-to:not(.finish-slide) {
   -webkit-animation: 0.218s both;
   -webkit-animation-name: g-panels-slideFromLeft;
   animation: 0.218s both;
   animation-name: g-panels-slideFromLeft;
 }
+
+g-panel-slider > .panels-ascending-from.finish-slide {
+  -webkit-transition: -webkit-transform 10.218s;
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transition: transform 0.218s;
+  transform: transform3d(-100%, 0, 0);
+}
+g-panel-slider > .panels-ascending-to.finish-slide {
+  -webkit-transition: -webkit-transform 10.218s;
+  -webkit-transform: translate3d(0, 0, 0);
+  transition: transform 0.218s;
+  transform: transform3d(0, 0, 0);
+}
+g-panel-slider > .panels-descending-from.finish-slide {
+  -webkit-transition: -webkit-transform 10.218s;
+  -webkit-transform: translate3d(100%, 0, 0);
+  transition: transform 0.218s;
+  transform: transform3d(100%, 0, 0);
+}
+g-panel-slider > .panels-descending-to.finish-slide {
+  -webkit-transition: -webkit-transform 10.218s;
+  -webkit-transform: translate3d(0, 0, 0);
+  transition: transform 0.218s;
+  transform: transform3d(0, 0, 0);}

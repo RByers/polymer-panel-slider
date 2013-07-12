@@ -86,19 +86,20 @@ license that can be found in the LICENSE file.
           if (this.slidingIn) {
               // TODO: temporarily reset transition to a custom one
               // that animates from the current position.
-              this.slidingOut.style.webkitTransform = '';
+              this.slidingOut.classList.add('finish-slide');
+              this.slidingIn.classList.add('finish-slide');
+              //this.slidingOut.style.webkitTransform = '';
               if (Math.abs(e.dx) > this.containerWidth / 2) {
-                  var transitionsEnabled = this._canTransition;
-                  if (transitionsEnabled)
-                      this.enableTransitions(false);
                   this.index = this.indexOf(this.slidingIn);
-                  if (transitionsEnabled)
-                      this.enableTransitions(true);
+              } else {
+                  // Need to animate back into the current position
+                  this.ensureTransition();
+                  this.beginTransition(this.slidingIn, this.slidingOut, e.dx < 0);
               }
+              //this.clearSlidingIn();  // TODO can't clear the transform yet really'
           }
           this.slidingOut = null;              
           this.lastDir = 0;
-          this.clearSlidingIn();
       },
       clearSlidingIn: function() {
           if (this.slidingIn) {
