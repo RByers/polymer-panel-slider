@@ -46,6 +46,7 @@ license that can be found in the LICENSE file.
         // Disable text selection while dragging the mouse
         // TODO: perhaps we should just disable mouse tracking instead?
         this.addEventListener('mousedown', function(e) { e.preventDefault(); });
+        this.transition = 'none';          
         this.super();
       },
       slidingIn: null,
@@ -53,7 +54,6 @@ license that can be found in the LICENSE file.
       lastDir: 0,
       containerWidth: 0,
       onTrackStart: function(e) {
-          console.log('trackstart');
           this.containerWidth = this.offsetWidth;
           this.slidingOut = this.getSelectedPanel();
       },
@@ -82,25 +82,28 @@ license that can be found in the LICENSE file.
           }
       },
       onTrackEnd: function(e) {
-          console.log('trackend');
           if (this.slidingIn) {
-              // TODO: temporarily reset transition to a custom one
-              // that animates from the current position.
-              this.slidingOut.classList.add('finish-slide');
-              this.slidingIn.classList.add('finish-slide');
-              //this.slidingOut.style.webkitTransform = '';
+              // TODO: animate this
               if (Math.abs(e.dx) > this.containerWidth / 2) {
-                  this.index = this.indexOf(this.slidingIn);
+                  this.index = this.indexOf(this.slidingIn);                  
+                  // indexChanged is invoked asynchronously
               } else {
-                  // Need to animate back into the current position
-                  this.ensureTransition();
-                  this.beginTransition(this.slidingIn, this.slidingOut, e.dx < 0);
+                  this.slidingOut.style.webkitTransform = '';                  
+                  this.slidingOut = null;              
+                  this.clearSlidingIn();
               }
-              //this.clearSlidingIn();  // TODO can't clear the transform yet really'
           }
-          this.slidingOut = null;              
           this.lastDir = 0;
       },
+      indexChanged: function(inOldValue) {
+          this.super(arguments);
+          if (this.slidingOut) {
+              this.slidingOut.style.webkitTransform = '';                  
+              this.slidingOut = null;                           
+              this.slidingIn.style.webkitTransform = '';
+              this.slidingIn = null;
+          }
+      },      
       clearSlidingIn: function() {
           if (this.slidingIn) {
               this.enablePanelShowing(this.slidingIn, false);
